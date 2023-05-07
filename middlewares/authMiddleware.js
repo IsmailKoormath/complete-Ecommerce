@@ -24,7 +24,6 @@ if(req?.headers?.authorization?.startsWith("Bearer")){
 const isAdmin =asyncHandler(async(req,res,next)=>{
     const {email} = req.user
     const adminUser = await User.findOne({email})
-    console.log(adminUser.role);
     if(adminUser.role !== "admin"){
         throw new Error("You are not an admin")
     }else{
