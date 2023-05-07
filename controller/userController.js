@@ -39,38 +39,57 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
 
 // Get all Users
 
-const getallUser = asyncHandler(async(req,res)=>{
-    try {
-        const getUsers = await User.find()
-        res.json(getUsers)
-    } catch (error) {
-        throw new Error(error)
-    }
-})
+const getallUser = asyncHandler(async (req, res) => {
+  try {
+    const getUsers = await User.find();
+    res.json(getUsers);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 
-// Get single User 
+// Get single User
 
-const getUser = asyncHandler(async(req,res)=>{
-const {id} = req.params
-    try {
-        const getUser = await User.findById(id)
-        res.json(getUser)
-    } catch (error) {
-        throw new Error(error)
+const getUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getUser = await User.findById(id);
+    res.json(getUser);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+// Update a User
+
+const updateUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updateaUser = await User.findByIdAndUpdate(id, {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      mobile: req.body.mobile,
+    },
+    {
+      new:true,
     }
-})
+    );
+    res.json(updateaUser)
+  } catch (error) {}
+});
 
 // Delete a User
 
-const deletAUser = asyncHandler(async(req,res)=>{
-    const {id} = req.params
-        try {
-            const deletUser = await User.findByIdAndDelete(id)
-            res.json(deletUser)
-        } catch (error) {
-            throw new Error(error)
-        }
-    })
+const deletAUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletUser = await User.findByIdAndDelete(id);
+    res.json(deletUser);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 
+module.exports = { createuser, loginUserCtrl, getallUser, getUser,updateUser, deletAUser };
 
-module.exports = { createuser, loginUserCtrl,getallUser,getUser,deletAUser };
