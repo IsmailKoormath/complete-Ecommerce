@@ -65,17 +65,19 @@ const getUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const updateaUser = await User.findByIdAndUpdate(id, {
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      mobile: req.body.mobile,
-    },
-    {
-      new:true,
-    }
+    const updateaUser = await User.findByIdAndUpdate(
+      id,
+      {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        mobile: req.body.mobile,
+      },
+      {
+        new: true,
+      }
     );
-    res.json(updateaUser)
+    res.json(updateaUser);
   } catch (error) {}
 });
 
@@ -91,5 +93,11 @@ const deletAUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createuser, loginUserCtrl, getallUser, getUser,updateUser, deletAUser };
-
+module.exports = {
+  createuser,
+  loginUserCtrl,
+  getallUser,
+  getUser,
+  updateUser,
+  deletAUser,
+};
