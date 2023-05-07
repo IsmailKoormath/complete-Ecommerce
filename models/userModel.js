@@ -49,6 +49,9 @@ var userSchema = new mongoose.Schema(
         ref: "Products",
       },
     ],
+    refreshtoken:{
+      type:String,
+    }
   },
   {
     timestamps: true,

@@ -6,12 +6,13 @@ const dotenv = require('dotenv').config()
 const authRouter =require('./routes/authRoute')
 const { notfound, errorHandler } = require('./middlewares/errorHandler')
 const PORT = process.env.PORT || 4000
-
+const cookieParser = require('cookie-parser')
 // database connection function
 dbConnect()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}))
+app.use(cookieParser())
 
 app.use("/api/user",authRouter)
 
