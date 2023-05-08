@@ -84,14 +84,17 @@ const handlerefreshToken = asyncHandler(async (req, res) => {
   if (!cookie?.refreshToken) throw new Error("No refresh token in Cookies");
   const refreshToken = cookie?.refreshToken;
   console.log(refreshToken);
-  const user = await User.findOne({ refreshToken });
+
+  const decoded = Jwt.verify(refreshToken,process.env.JWT_SECRET)
+  const user = await User.findById(decoded?.id)
+
+  // const user = await User.findOne({ refreshToken });
   console.log(user);
   if (!user) throw new Error("No refresh token present in db or not matched");
   Jwt.verify(
     refreshToken,
     process.env.JWT_SECRET,
-    (err,
-    (decoded) => {
+    (err,(decoded) => {
       if (err || user.id !== decoded.id) {
         throw new Error("There is something wrong with refresh token");
       }

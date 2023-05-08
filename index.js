@@ -4,6 +4,7 @@ const dbConnect = require('./config/dbConnection')
 const app = express()
 const dotenv = require('dotenv').config()
 const authRouter =require('./routes/authRoute')
+const productRouter = require('./routes/productRouter')
 const { notfound, errorHandler } = require('./middlewares/errorHandler')
 const PORT = process.env.PORT || 4000
 const cookieParser = require('cookie-parser')
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({extended : false}))
 app.use(cookieParser())
 
 app.use("/api/user",authRouter)
+app.use("/api/product",productRouter)
 
 app.use(notfound)
 app.use(errorHandler)
