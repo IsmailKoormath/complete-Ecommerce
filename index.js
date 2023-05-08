@@ -4,13 +4,15 @@ const dbConnect = require('./config/dbConnection')
 const app = express()
 const dotenv = require('dotenv').config()
 const authRouter =require('./routes/authRoute')
-const productRouter = require('./routes/productRouter')
+const productRouter = require('./routes/productRoute')
 const { notfound, errorHandler } = require('./middlewares/errorHandler')
 const PORT = process.env.PORT || 4000
 const cookieParser = require('cookie-parser')
+const morgan =require('morgan')
 // database connection function
 dbConnect()
 
+app.use(morgan('dev '))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}))
 app.use(cookieParser())

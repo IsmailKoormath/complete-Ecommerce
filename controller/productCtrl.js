@@ -1,12 +1,15 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
-
+const slugify = require('slugify')
 // create a product
 
 const createProduct = asyncHandler(async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.json(product);
+    if(req.body.title){
+        req.body.slug= slugify(req.body.title)
+    }
+    const newProduct = await Product.create(req.body);
+    res.json(newProduct );
   } catch (error) {
     throw new Error(error)
   }
@@ -35,4 +38,19 @@ const getAllProducts = asyncHandler(async(req,res)=>{
     }
 })
 
-module.exports = { createProduct ,getaProduct,getAllProducts};
+// Update product
+
+const updateProduct = asyncHandler(async(req,res)=>{
+    const {id} = req.params
+    try {
+        if(req.body.title){
+            req.body.slug = slugify(req.body.title)
+        }
+        const updateProduct = await Product.findByIdAndUpdate(id,req.body,{new:true})
+        res.json(updateProduct)
+    } catch (error) {
+        throw new Error(error)
+    }
+})
+
+module.exports = { createProduct ,getaProduct,getAllProducts,updateProduct};
