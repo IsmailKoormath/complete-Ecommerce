@@ -9,6 +9,7 @@ const { notfound, errorHandler } = require('./middlewares/errorHandler')
 const PORT = process.env.PORT || 4000
 const cookieParser = require('cookie-parser')
 const morgan =require('morgan')
+
 // database connection function
 dbConnect()
 

@@ -80,10 +80,8 @@ const getUser = asyncHandler(async (req, res) => {
 
 const handlerefreshToken = asyncHandler(async (req, res) => {
   const cookie = req.cookies;
-  console.log(cookie);
   if (!cookie?.refreshToken) throw new Error("No refresh token in Cookies");
   const refreshToken = cookie?.refreshToken;
-  console.log(refreshToken);
 
   const decoded = Jwt.verify(refreshToken,process.env.JWT_SECRET)
   const user = await User.findById(decoded?.id)
