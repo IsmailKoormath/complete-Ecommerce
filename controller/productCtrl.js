@@ -41,14 +41,23 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
     let query = Product.find(JSON.parse(queryStr));
 
-// sorting
+    // sorting
 
-if(req.query.sort){
-    const sortBy = req.query.sort.split(",").join(" ")
-    query = query.sort(sortBy)
-} else {
-    query = query.sort("-createdAt")
-}
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort("-createdAt");
+    }
+
+    // limiting the fields
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("");
+    }
 
     const product = await query;
     // const Allproducts = await Product.find(queryObj);
@@ -74,6 +83,9 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
+// Delte product
+
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
