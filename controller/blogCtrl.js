@@ -32,7 +32,7 @@ const updateBlog = asyncHandler(async (req, res) => {
 const getaBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const getBlog = await Blog.findById(id);
+    const getBlog = await Blog.findById(id).populate("likes dislikes");
     const updateViews = await Blog.findByIdAndUpdate(
       id,
       {
@@ -75,7 +75,7 @@ const deleteaBlog = asyncHandler(async (req, res) => {
 
 const liketheBlog = asyncHandler(async (req, res) => {
   const { blogId } = req.body;
-//   validateMongodbId(blogId);
+  //   validateMongodbId(blogId);
   const blog = await Blog.findById(blogId);
   const loginUserId = req?.user?._id;
   console.log(loginUserId);
@@ -122,7 +122,7 @@ const liketheBlog = asyncHandler(async (req, res) => {
 
 const disliketheBlog = asyncHandler(async (req, res) => {
   const { blogId } = req.body;
-//   validateMongodbId(blogId);
+  //   validateMongodbId(blogId);
   const blog = await Blog.findById(blogId);
   const loginUserId = req?.user?._id;
   const isDisLiked = blog?.isDisliked;
@@ -172,5 +172,5 @@ module.exports = {
   getAllBlogs,
   deleteaBlog,
   liketheBlog,
-  disliketheBlog
+  disliketheBlog,
 };
