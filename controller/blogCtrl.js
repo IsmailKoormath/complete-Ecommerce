@@ -20,10 +20,31 @@ const updateBlog = asyncHandler(async (req, res) => {
     const updateBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    res.json(updateBlog)
+    res.json(updateBlog);
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 });
 
-module.exports = { createBlog,updateBlog };
+// Get a blog
+
+const getaBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getBlog = await Blog.findById(id);
+    const updateViews = await Blog.findByIdAndUpdate(
+      id,
+      {
+        $inc: { numViews: 1 },
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(getBlog);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+module.exports = { createBlog, updateBlog, getaBlog };
