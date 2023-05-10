@@ -90,7 +90,7 @@ const handlerefreshToken = asyncHandler(async (req, res) => {
   const user = await User.findById(decoded?.id);
 
   // const user = await User.findOne({ refreshToken });
-  console.log(user);
+
   if (!user) throw new Error("No refresh token present in db or not matched");
   Jwt.verify(
     refreshToken,
