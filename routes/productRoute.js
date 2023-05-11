@@ -15,9 +15,10 @@ const router = express.Router();
 router.post("/create-product",authMiddleware, isAdmin,createProduct);
 router.get("/:id", getaProduct);
 router.put('/wishlist',authMiddleware,wishlist)
+router.put("/ratings",authMiddleware, rating);
+
 router.get("/", getAllProducts);
 router.put("/:id",authMiddleware, isAdmin, updateProduct);
 router.delete("/:id",authMiddleware,isAdmin, deleteProduct);
-router.put("/rating",authMiddleware, rating);
 
 module.exports = router;
