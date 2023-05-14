@@ -31,4 +31,14 @@ const updateCoupon = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createCoupon, getallCoupon, updateCoupon };
+const deleteCoupon = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletecoupon = await Coupon.findByIdAndDelete(id);
+    res.json(deletecoupon)
+  } catch (error) {
+    throw new Error(error)
+  }
+});
+
+module.exports = { createCoupon, getallCoupon, updateCoupon,deleteCoupon };
