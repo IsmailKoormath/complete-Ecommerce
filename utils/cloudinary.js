@@ -7,5 +7,18 @@ api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
 const cloudinaryUploadImg = async (fileToUploads)=>{
-    
+    return new Promise ((resolve)=>{
+        cloudinary.UploadStream(fileToUploads, (result)=>{
+            resolve(
+                {
+                    url: result.secure_url,
+                },
+                {
+                    resource_type: "auto"
+                }
+            )
+        })
+    })
 }
+
+module.exports = cloudinaryUploadImg
