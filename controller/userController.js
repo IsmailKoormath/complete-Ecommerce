@@ -73,6 +73,7 @@ const adminLoginCtrl = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const findAdmin = await User.findOne({ email });
+  if(findAdmin.role !== "admin") throw new Error("Not Authorised")
   if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
     //genete refresh token
     const refreshToken = await generaterefreshToken(findAdmin?._id);
