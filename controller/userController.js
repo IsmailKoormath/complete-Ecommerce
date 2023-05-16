@@ -12,8 +12,8 @@ const { log } = require("console");
 
 const createuser = asyncHandler(async (req, res) => {
   const email = req.body.email;
-  const findUser = await User.findOne({ email: email });
-  if (!findUser) {
+  const findAdmin = await User.findOne({ email: email });
+  if (!findAdmin) {
     const newUser = await User.create(req.body);
     res.json(newUser);
   } else {
@@ -26,12 +26,12 @@ const createuser = asyncHandler(async (req, res) => {
 const loginUserCtrl = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const findUser = await User.findOne({ email });
-  if (findUser && (await findUser.isPasswordMatched(password))) {
+  const findAdmin = await User.findOne({ email });
+  if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
     //genete refresh token
-    const refreshToken = await generaterefreshToken(findUser?._id);
+    const refreshToken = await generaterefreshToken(findAdmin?._id);
     const updateuser = await User.findByIdAndUpdate(
-      findUser.id,
+      findAdmin.id,
       {
         refreshToken: refreshToken,
       },
@@ -42,13 +42,13 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
       maxAge: 72 * 60 * 60 * 1000,
     });
     res.json({
-      _id: findUser?._id,
-      firstname: findUser?.firstname,
-      lastname: findUser?.lastname,
-      email: findUser?.email,
-      mobile: findUser?.mobile,
-      role: findUser?.role,
-      token: generateToken(findUser?._id),
+      _id: findAdmin?._id,
+      firstname: findAdmin?.firstname,
+      lastname: findAdmin?.lastname,
+      email: findAdmin?.email,
+      mobile: findAdmin?.mobile,
+      role: findAdmin?.role,
+      token: generateToken(findAdmin?._id),
     });
   } else {
     throw new Error("Invalid Credentials");
@@ -63,6 +63,41 @@ const getallUser = asyncHandler(async (req, res) => {
     res.json(getUsers);
   } catch (error) {
     throw new Error(error);
+  }
+});
+
+// admin login
+
+
+const adminLoginCtrl = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const findAdmin = await User.findOne({ email });
+  if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
+    //genete refresh token
+    const refreshToken = await generaterefreshToken(findAdmin?._id);
+    const updateAdmin = await User.findByIdAndUpdate(
+      findAdmin.id,
+      {
+        refreshToken: refreshToken,
+      },
+      { new: true }
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 72 * 60 * 60 * 1000,
+    });
+    res.json({
+      _id: findAdmin?._id,
+      firstname: findAdmin?.firstname,
+      lastname: findAdmin?.lastname,
+      email: findAdmin?.email,
+      mobile: findAdmin?.mobile,
+      role: findAdmin?.role,
+      token: generateToken(findAdmin?._id),
+    });
+  } else {
+    throw new Error("Invalid Credentials");
   }
 });
 
@@ -282,4 +317,5 @@ module.exports = {
   updatePassword,
   forgotPasswordToken,
   resetPassword,
+  adminLoginCtrl
 };
