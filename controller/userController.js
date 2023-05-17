@@ -1,5 +1,6 @@
 const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
+const Product = require("../models/productModel");
 const asyncHandler = require("express-async-handler");
 const { param } = require("../routes/authRoute");
 const validateMongodbId = require("../utils/validateMongodbId");
@@ -304,6 +305,18 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.json(user);
 });
 
+// Get wishlist
+
+const getWishlist = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const findUser = await User.findById(_id).populate("wishlist")
+    res.json(findUser);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 module.exports = {
   createuser,
   loginUserCtrl,
@@ -318,5 +331,6 @@ module.exports = {
   updatePassword,
   forgotPasswordToken,
   resetPassword,
-  adminLoginCtrl
+  adminLoginCtrl,
+  getWishlist
 };

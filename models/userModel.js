@@ -47,7 +47,7 @@ var userSchema = new mongoose.Schema(
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Products",
+        ref: "Product",
       },
     ],
     refreshtoken: {
@@ -88,4 +88,5 @@ userSchema.methods.createPasswordResetToken = async function () {
 };
 
 //Export the model
+
 module.exports = mongoose.model("User", userSchema);
