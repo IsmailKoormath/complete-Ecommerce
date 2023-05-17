@@ -56,6 +56,28 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
   }
 });
 
+// save user Address
+
+const userAddress = asyncHandler(async(req,res,next)=>{
+  const {_id}= req.user
+  validateMongodbId(_id)
+
+  try {
+    const userAddress = await User.findByIdAndUpdate(
+      _id,
+      {
+        address:req?.body?.address,
+      },
+      {
+        new:true
+      }
+    )
+    res.json(userAddress)
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
 // Get all Users
 
 const getallUser = asyncHandler(async (req, res) => {
@@ -332,5 +354,6 @@ module.exports = {
   forgotPasswordToken,
   resetPassword,
   adminLoginCtrl,
-  getWishlist
+  getWishlist,
+  userAddress
 };

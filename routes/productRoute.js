@@ -10,7 +10,8 @@ const {
 } = require("../controller/productCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
-const multer = require('multer')
+const multer = require('multer');
+const { productImgResize } = require("../middlewares/uploadImage");
 const router = express.Router();
 
 const storage = multer.diskStorage({})
