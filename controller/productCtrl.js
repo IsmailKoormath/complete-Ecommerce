@@ -3,14 +3,30 @@ const Product = require("../models/productModel");
 const slugify = require("slugify");
 const validateMongodbId = require("../utils/validateMongodbId");
 const User = require("../models/userModel");
+const  cloudinary = require("../utils/cloudinary");
+
 // create a product
 
 const createProduct = asyncHandler(async (req, res) => {
+  // const productImage=req.files
+  const productdata = req.body;
   try {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const newProduct = await Product.create(req.body);
+    const images = [];
+    if (req.files) {
+      for (const file of req.files) {
+        const publicId = `product/${file.filename}`;
+        const result = await cloudinary.uploader.upload(file.path ,{public_id: publicId});
+        images.push({
+          publicId:result.public_id,
+          url:result.secure_url
+        })
+      }
+    }
+    productdata.images = images
+    const newProduct = await Product.create(productdata);
     res.json(newProduct);
   } catch (error) {
     throw new Error(error);
@@ -143,7 +159,7 @@ const wishlist = asyncHandler(async (req, res) => {
 
 const rating = asyncHandler(async (req, res) => {
   const { _id } = req.user;
-  const { star, prodId,comment } = req.body;
+  const { star, prodId, comment } = req.body;
   try {
     const product = await Product.findById(prodId);
     let alreadyRated = product.ratings.find(
@@ -155,7 +171,7 @@ const rating = asyncHandler(async (req, res) => {
           ratings: { $elemMatch: alreadyRated },
         },
         {
-          $set: { "ratings.$.star": star, "ratings.$.comment":comment },
+          $set: { "ratings.$.star": star, "ratings.$.comment": comment },
         },
         {
           new: true,
@@ -168,7 +184,7 @@ const rating = asyncHandler(async (req, res) => {
           $push: {
             ratings: {
               star: star,
-              comment:comment,
+              comment: comment,
               postedby: _id,
             },
           },
@@ -178,20 +194,22 @@ const rating = asyncHandler(async (req, res) => {
         }
       );
     }
-    const getAllrating = await Product.findById(prodId)
-    let totalRating = getAllrating.ratings.length
-    let ratingsum = getAllrating.ratings.map((item)=>item.star).reduce((prev,curr)=>prev + curr, 0)
-    let actualRating = Math.round(ratingsum/ totalRating)
+    const getAllrating = await Product.findById(prodId);
+    let totalRating = getAllrating.ratings.length;
+    let ratingsum = getAllrating.ratings
+      .map((item) => item.star)
+      .reduce((prev, curr) => prev + curr, 0);
+    let actualRating = Math.round(ratingsum / totalRating);
     let finalproduct = await Product.findByIdAndUpdate(
       prodId,
       {
         totalrating: actualRating,
       },
       {
-        new: true
+        new: true,
       }
-    )
-    res.json(finalproduct)
+    );
+    res.json(finalproduct);
   } catch (error) {
     throw new Error(error);
   }

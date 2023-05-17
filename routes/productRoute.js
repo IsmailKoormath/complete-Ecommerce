@@ -10,9 +10,13 @@ const {
 } = require("../controller/productCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
+const multer = require('multer')
 const router = express.Router();
 
-router.post("/create-product",authMiddleware, isAdmin,createProduct);
+const storage = multer.diskStorage({})
+const upload = multer({storage})
+
+router.post("/create-product",upload.array('images') ,authMiddleware, isAdmin,createProduct);
 router.get("/:id", getaProduct);
 router.put('/wishlist',authMiddleware,wishlist)
 router.put("/ratings",authMiddleware, rating);
