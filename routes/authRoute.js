@@ -31,7 +31,7 @@ router.post("/admin-login", adminLoginCtrl);
 router.get("/all-users", getallUser);
 router.get("/refresh",handlerefreshToken)
 router.get('/wishlist',authMiddleware,getWishlist)
-router.get('/cart',authMiddleware,userCart)
+router.post('/cart',authMiddleware,userCart)
 router.get('/get-cart',authMiddleware,getUserCart)
 
 router.get("/:id",authMiddleware,isAdmin, getUser);
