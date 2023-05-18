@@ -19,6 +19,7 @@ const {
   userCart,
   getUserCart,
   emptyCart,
+  applyCoupon
 } = require("../controller/userController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -34,6 +35,7 @@ router.get("/refresh",handlerefreshToken)
 router.get('/wishlist',authMiddleware,getWishlist)
 router.post('/cart',authMiddleware,userCart)
 router.get('/get-cart',authMiddleware,getUserCart)
+router.post("/cart/applycoupon",authMiddleware,applyCoupon)
 
 router.get("/:id",authMiddleware,isAdmin, getUser);
 router.put("/edit-user",authMiddleware,updateUser)

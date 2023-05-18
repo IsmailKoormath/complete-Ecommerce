@@ -2,6 +2,7 @@ const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Cart = require("../models/cartModel")
+const Coupon = require("../models/couponModel")
 const asyncHandler = require("express-async-handler");
 const { param } = require("../routes/authRoute");
 const validateMongodbId = require("../utils/validateMongodbId");
@@ -409,6 +410,33 @@ const emptyCart = asyncHandler(async(req,res)=>{
   }
 })
 
+// apply coupon
+
+const applyCoupon = asyncHandler(async (req, res) => {
+  const { coupon } = req.body;
+  const { _id } = req.user;
+  validateMongodbId(_id)
+  const validCoupon = await Coupon.findOne({ name: coupon });
+  if (validCoupon === null) {
+    throw new Error("Invalid Coupon");
+  }
+  const user = await User.findOne({ _id });
+  let { cartTotal } = await Cart.findOne({
+    orderby: user._id,
+  }).populate("products.product");
+  let totalAfterDiscount = (
+    cartTotal -
+    (cartTotal * validCoupon.discount) / 100
+  ).toFixed(2);
+  await Cart.findOneAndUpdate(
+    { orderby: user._id },
+    { totalAfterDiscount },
+    { new: true }
+  );
+  res.json(totalAfterDiscount);
+});
+
+
 module.exports = {
   createuser,
   loginUserCtrl,
@@ -428,5 +456,6 @@ module.exports = {
   userAddress,
   userCart,
   getUserCart,
-  emptyCart
+  emptyCart,
+  applyCoupon
 };
