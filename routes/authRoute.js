@@ -18,6 +18,7 @@ const {
   userAddress,
   userCart,
   getUserCart,
+  emptyCart,
 } = require("../controller/userController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -39,7 +40,9 @@ router.put("/edit-user",authMiddleware,updateUser)
 router.put("/save-address",authMiddleware,userAddress)
 
 router.put("/password",authMiddleware,updatePassword)
+router.delete("/empty-cart",authMiddleware,emptyCart)
 router.delete("/:id", deletAUser);
+
 router.put("/block-user/:id",authMiddleware,isAdmin,blockUser)
 router.put("/unblock-user/:id",authMiddleware,isAdmin,unblockUser)
 router.post('/logout',LogoutUser)
