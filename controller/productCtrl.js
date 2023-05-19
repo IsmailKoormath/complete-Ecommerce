@@ -8,7 +8,6 @@ const  cloudinary = require("../utils/cloudinary");
 // create a product
 
 const createProduct = asyncHandler(async (req, res) => {
-  // const productImage=req.files
   const productdata = req.body;
   try {
     if (req.body.title) {
